@@ -27,8 +27,9 @@ function paginate (query, options, callback) {
   const leanWithId = options.hasOwnProperty('leanWithId') ? options.leanWithId : true;
 
   const limit = options.hasOwnProperty('limit') ? options.limit : 10;
-  let skip; let offset; let
-    page;
+  let skip;
+  let offset;
+  let page;
 
   if (options.hasOwnProperty('offset')) {
     offset = options.offset;
@@ -44,11 +45,17 @@ function paginate (query, options, callback) {
 
   const promises = {
     docs: Promise.resolve([]),
-    count: this.count(query).exec(),
+    count: Object.prototype.hasOwnProperty.call(query, 'deleted')
+      ? this.countWithDeleted(query).exec()
+      : this.count(query).exec(),
   };
 
   if (limit) {
-    var query = this.find(query)
+    var query = Object.prototype.hasOwnProperty.call(query, 'deleted')
+      ? this.findWithDeleted(query)
+      : this.find(query);
+
+    query
       .select(select)
       .sort(sort)
       .skip(skip)
