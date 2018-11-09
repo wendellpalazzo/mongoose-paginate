@@ -59,8 +59,9 @@ function paginate (query, options, callback) {
       .select(select)
       .sort(sort)
       .skip(skip)
-      .limit(limit)
       .lean(lean);
+
+    if (limit > 0) query.limit(limit);
 
     if (collation) query.collation(collation);
 
