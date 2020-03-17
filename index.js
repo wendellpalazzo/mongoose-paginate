@@ -36,7 +36,7 @@ function paginate (query, options, callback) {
     skip = offset;
   } else if (options.hasOwnProperty('page')) {
     page = options.page;
-    skip = (page - 1) * limit;
+    skip = Math.abs((page - 1) * limit);
   } else {
     offset = 0;
     page = 1;
@@ -98,7 +98,7 @@ function paginate (query, options, callback) {
 
       if (page !== undefined) {
         result.page = page;
-        result.pages = Math.ceil(data.count / limit) || 1;
+        result.pages = Math.abs(Math.ceil(data.count / limit)) || 1;
       }
 
       return result;
@@ -109,7 +109,7 @@ function paginate (query, options, callback) {
 /**
  * @param {Schema} schema
  */
-module.exports = function(schema) {
+module.exports = function (schema) {
   schema.statics.paginate = paginate;
 };
 
